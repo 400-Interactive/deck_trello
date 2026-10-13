@@ -1,101 +1,101 @@
 # Deck Trello Import
 
-Application Nextcloud qui importe un tableau Trello dans [Deck](https://github.com/nextcloud/deck).
+Nextcloud app that imports a Trello board into [Deck](https://github.com/nextcloud/deck).
 
-L’import crée un nouveau tableau Deck, ou ajoute les fichiers et les commentaires à un tableau déjà importé. Il se lance depuis la page **Import Trello** et depuis la commande `occ deck_trello:import`.
+The import creates a new Deck board, or adds files and comments to a board that was already imported. It runs from the **Import Trello** page and from the `occ deck_trello:import` command.
 
-## Ce qui est repris
+## What is imported
 
 | Trello | Deck |
 | --- | --- |
-| Liste | Pile |
-| Carte | Carte, y compris les cartes archivées |
-| Étiquette | Étiquette, rapprochée de la palette Deck |
-| Checklist | Deck Checklists si l’application est activée, sinon cases Markdown dans la description |
-| Commentaire `commentCard` | Commentaire Deck |
-| Membre | Utilisateur Deck si une correspondance existe, sinon une ligne dans la description |
-| Pièce jointe | Fichier Deck si un jeton est fourni, sinon un lien |
-| Description du tableau | Carte « Description » sur la première pile |
-| Date de début et échéance | Dates de la carte |
+| List | Stack |
+| Card | Card, including archived cards |
+| Label | Label, mapped onto the Deck palette |
+| Checklist | Deck Checklists when that app is enabled, otherwise Markdown checkboxes in the description |
+| `commentCard` action | Deck comment |
+| Member | Deck user when a match exists, otherwise a line in the description |
+| Attachment | Deck file when a token is provided, otherwise a link |
+| Board description | A card titled “Description” on the first stack |
+| Due date | Due date on the card |
 
-Les listes fermées sont ignorées, sauf si l’option est cochée. Deck ne permet pas d’archiver une pile par son API publique, donc une liste fermée importée reste une pile ouverte.
+Closed lists are skipped unless the option is selected. Deck’s public API cannot archive a stack, so an imported closed list stays an open stack.
 
-Seules les actions de type `commentCard` deviennent des commentaires. L’auteur enregistré dans Deck est la personne qui lance l’import. Le texte commence par l’auteur Trello et la date, par exemple `Nathan (2024-03-01 12:00):`.
+Only actions of type `commentCard` become comments. The author stored in Deck is the person who runs the import. The text starts with the Trello author and the date, for example `Nathan (2024-03-01 12:00):`.
 
-Un membre dont l’identifiant Trello est identique à un uid Nextcloud est assigné automatiquement. Les autres se règlent après l’aperçu : chaque membre Trello est proposé avec un choix d’utilisateur Nextcloud, avatar compris. Le compte connecté apparaît dans cette liste. La correspondance envoyée a la forme `utilisateurTrello=uidNextcloud`. Un membre sans correspondance reste indiqué sur la carte.
+A member whose Trello username matches a Nextcloud uid is assigned automatically. The others are matched after Preview: each Trello member is shown next to a Nextcloud user picker, including the avatar. The signed-in account appears in that list. The submitted mapping has the form `trelloUsername=nextcloudUid`. A member without a match stays listed on the card as `Membres Trello : …`.
 
-## Fichier JSON ou API
+## JSON file or API
 
-Le fichier JSON est l’export Trello du tableau. Cet export ne contient que les **1000 dernières actions**. Les cartes, les listes et les pièces jointes ne sont pas coupées par cette limite, mais des commentaires plus anciens peuvent manquer.
+The JSON file is Trello’s board export. That export contains only the **latest 1000 actions**. Cards, lists, and attachments are not cut by this limit, but older comments can be missing.
 
-L’adresse du tableau, de la forme `https://trello.com/b/xxxxxxxx`, passe par l’API Trello. L’application lit le tableau, puis pagine tous les commentaires `commentCard`. L’historique n’est donc plus limité aux 1000 dernières actions.
+A board address such as `https://trello.com/b/xxxxxxxx` goes through the Trello API. The app loads the board, then pages through every `commentCard` comment. The history is no longer limited to the latest 1000 actions.
 
-## Clé API et jeton
+## API key and token
 
-Trello demande les deux. La clé identifie le Power-Up. Le jeton identifie la personne qui autorise la lecture.
+Trello requires both. The key identifies the Power-Up. The token identifies the person who allows read access.
 
-La clé est enregistrée une fois pour ce Nextcloud :
+The key is stored once for this Nextcloud:
 
 ```bash
-occ config:app:set deck_trello api_key --value="LA_CLE_API"
+occ config:app:set deck_trello api_key --value="THE_API_KEY"
 ```
 
-La page d’import ne la redemande pas. **Créer un jeton de lecture** ouvre l’autorisation Trello avec cette clé, en lecture seule, pour **1 jour**. Trello n’accepte que `1hour`, `1day`, `30days` et `never`. Le jeton sert à cet import et n’est pas enregistré.
+The import page does not ask for it again. **Create a read token** opens the Trello authorization with that key, read-only, for **1 day**. Trello only accepts `1hour`, `1day`, `30days`, and `never`. The token is used for that import and is not stored.
 
-**Use another API key** reste replié. Il sert seulement à coller une autre clé pour un import précis.
+**Use another API key** stays collapsed. It is only there to paste a different key for one import.
 
-Pour obtenir la clé : créer un Power-Up sur [trello.com/power-ups/admin/new](https://trello.com/power-ups/admin/new). Les fonctionnalités du Power-Up ne sont pas utilisées. Ouvrir ensuite `https://trello.com/power-ups/{id}/edit/api-key` et copier le champ **API key**. La clé secrète ne fonctionne pas comme jeton de lecture.
+To get the key, create a Power-Up at [trello.com/power-ups/admin/new](https://trello.com/power-ups/admin/new). Power-Up features are not used. Then open `https://trello.com/power-ups/{id}/edit/api-key` and copy the **API key** field. The secret key does not work as a read token.
 
-Sans clé ni jeton, un import JSON reste possible. Les fichiers Trello sont alors conservés comme des liens.
+Without a key and a token, a JSON import still works. Trello files are kept as links.
 
-## Pièces jointes
+## Attachments
 
-Les fichiers hébergés par Trello sont téléchargés puis ajoutés à la carte avant son archivage. L’autorisation est envoyée dans l’en-tête `Authorization`, car l’adresse de téléchargement refuse la clé dans l’URL. Un fichier fait au plus 32 Mo, et l’ensemble d’un import au plus 200 Mo. Le nom local contient l’identifiant Trello, pour que plusieurs fichiers nommés `image.png` ne s’écrasent pas.
+Files hosted by Trello are downloaded and attached to the card before it is archived. Authorization is sent in the `Authorization` header, because the download address rejects the key in the URL. One file is at most 32 MB, and one import is at most 200 MB in total. The local name includes the Trello id, so several files named `image.png` do not overwrite each other.
 
-## Tableau déjà importé
+## A board that was already imported
 
-La case **Add the files and comments to an existing Deck board** n’efface pas le tableau. Elle retrouve les cartes par leur titre et y ajoute les fichiers et les commentaires manquants. Une checklist dont le titre existe déjà n’est pas recréée.
+**Add the files and comments to an existing Deck board** does not wipe the board. It finds cards by title and adds the missing files and comments. A checklist whose title already exists is not created again.
 
-## Depuis Deck
+## From Deck
 
-Quand Deck est ouvert, **Import Trello** apparaît dans sa barre latérale, sous l’import de tableau.
+When Deck is open, **Import Trello** appears in its sidebar, under the board import entry.
 
-## Commande
+## Command
 
 ```bash
 occ deck_trello:import export.json --user=admin
-occ deck_trello:import --trello-board="https://trello.com/b/xxxxxxxx" --trello-token="JETON" --user=admin
-occ deck_trello:import export.json --user=admin --board=5 --trello-token="JETON"
+occ deck_trello:import --trello-board="https://trello.com/b/xxxxxxxx" --trello-token="TOKEN" --user=admin
+occ deck_trello:import export.json --user=admin --board=5 --trello-token="TOKEN"
 ```
 
-Options utiles :
+Useful options:
 
-- `--user` : uid Nextcloud propriétaire du tableau
-- `--map-user=trello=nextcloud`, répétable, ou `--map-file`
+- `--user`: Nextcloud uid that owns the board
+- `--map-user=trello=nextcloud`, repeatable, or `--map-file`
 - `--include-closed-lists`
-- `--use-deck-checklist` si Deck Checklists est activée
-- `--trello-key` pour remplacer la clé enregistrée
+- `--use-deck-checklist` when Deck Checklists is enabled
+- `--trello-key` to replace the stored key
 - `--trello-token`
-- `--trello-board` : adresse ou identifiant du tableau
-- `--board` : identifiant d’un tableau Deck existant
+- `--trello-board`: board address or id
+- `--board`: id of an existing Deck board
 
-## Limites
+## Limits
 
-- Titre de carte : 255 caractères. Titres de tableau, de pile et d’étiquette : 100 caractères.
-- Commentaire : 1000 caractères.
-- Réponse de l’API pour un tableau : 40 Mo.
-- Deux étiquettes de même nom sont distinguées. Un titre d’étiquette vide reprend le nom de la couleur Trello.
+- Card title: 255 characters. Board, stack, and label titles: 100 characters.
+- Comment: 1000 characters.
+- API response for one board: 40 MB.
+- Two labels with the same name are kept apart. An empty label title uses the Trello color name.
 
 ## Installation
 
-Copier ce dossier dans `custom_apps/deck_trello`, puis :
+Copy this folder into `custom_apps/deck_trello`, then:
 
 ```bash
 occ app:enable deck_trello
 occ upgrade
 ```
 
-Nextcloud 30 à 35, PHP 8.1 ou plus, et l’application Deck. Deck Checklists est facultative.
+Nextcloud 30 to 35, PHP 8.1 or newer, and the Deck app. Deck Checklists is optional.
 
 ## Tests
 

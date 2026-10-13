@@ -1,0 +1,125 @@
+{
+	"name": "Final Night At Hotel",
+	"desc": "Nuit de test",
+	"lists": [
+		{"id": "list-closed", "name": "Archivé", "closed": true, "pos": 5},
+		{"id": "list-doing", "name": "En cours", "closed": false, "pos": 10},
+		{"id": "list-todo", "name": "Pas commencé", "closed": false, "pos": 20}
+	],
+	"labels": [
+		{"id": "label-yellow", "name": "A TESTER", "color": "yellow"},
+		{"id": "label-green", "name": "", "color": "green"},
+		{"id": "label-bug", "name": "BUG", "color": "orange"},
+		{"id": "label-bug-2", "name": "BUG", "color": "red"},
+		{"id": "label-sky", "name": "Ciel", "color": "sky"},
+		{"id": "label-lime", "name": "En cours", "color": "lime"},
+		{"id": "label-black", "name": "Futur", "color": "black"},
+		{"id": "label-pink", "name": "Rose", "color": "pink"},
+		{"id": "label-purple", "name": "Violet", "color": "purple"},
+		{"id": "label-blue", "name": "Bleu", "color": "blue"}
+	],
+	"members": [
+		{"id": "member-kinj", "username": "kinj14", "fullName": "Kinj14"},
+		{"id": "member-nathan", "username": "nathanmacaignereikoarts", "fullName": "Nathan Macaigne"}
+	],
+	"checklists": [
+		{
+			"id": "check-1",
+			"idCard": "card-shader",
+			"name": "Fantome",
+			"pos": 2,
+			"checkItems": [
+				{"name": "Autre item", "state": "incomplete", "pos": 20},
+				{"name": "Faire un certains nombre de points...", "state": "complete", "pos": 10}
+			]
+		}
+	],
+	"cards": [
+		{
+			"id": "card-shader",
+			"name": "Gerer le chargement des shaders",
+			"desc": "Eviter les freezes.",
+			"idList": "list-doing",
+			"idLabels": ["label-yellow", "label-green"],
+			"idMembers": ["member-kinj"],
+			"closed": false,
+			"pos": 30,
+			"due": "2026-09-25T20:37:11.508Z",
+			"attachments": [
+				{
+					"name": "image.png",
+					"url": "https://trello.com/1/cards/abc/attachments/def/download/image.png",
+					"isUpload": true
+				}
+			]
+		},
+		{
+			"id": "card-done",
+			"name": "Carte archivée",
+			"desc": "",
+			"idList": "list-todo",
+			"idLabels": [],
+			"idMembers": ["member-nathan"],
+			"closed": true,
+			"pos": 10,
+			"due": null,
+			"attachments": []
+		},
+		{
+			"id": "card-closed-list",
+			"name": "Dans une liste fermée",
+			"desc": "",
+			"idList": "list-closed",
+			"idLabels": [],
+			"idMembers": [],
+			"closed": false,
+			"pos": 1,
+			"due": null,
+			"attachments": []
+		},
+		{
+			"id": "card-missing",
+			"name": "Liste absente",
+			"desc": "",
+			"idList": "list-missing",
+			"idLabels": [],
+			"idMembers": [],
+			"closed": false,
+			"pos": 1,
+			"due": null,
+			"attachments": []
+		},
+		{
+			"id": "card-long",
+			"name": "Titre beaucoup trop long pour Deck et qui doit être tronqué à deux cent cinquante cinq caractères exactement afin de vérifier la limite appliquée par le parseur sur les cartes Trello importées dans Nextcloud Deck sans perdre le début du titre original de la carte.",
+			"desc": "",
+			"idList": "list-doing",
+			"idLabels": ["label-bug", "label-bug-2"],
+			"idMembers": [],
+			"closed": false,
+			"pos": 10,
+			"due": null,
+			"attachments": []
+		}
+	],
+	"actions": [
+		{
+			"type": "updateCard",
+			"date": "2026-09-01T10:00:00.000Z",
+			"data": {},
+			"memberCreator": {"fullName": "Kinj14", "username": "kinj14"}
+		},
+		{
+			"type": "commentCard",
+			"date": "2026-09-03T12:00:00.000Z",
+			"data": {"text": "Deuxième note", "card": {"id": "card-shader"}},
+			"memberCreator": {"fullName": "Nathan Macaigne", "username": "nathanmacaignereikoarts"}
+		},
+		{
+			"type": "commentCard",
+			"date": "2026-09-02T08:00:00.000Z",
+			"data": {"text": "Première note", "card": {"id": "card-shader"}},
+			"memberCreator": {"fullName": "Kinj14", "username": "kinj14"}
+		}
+	]
+}

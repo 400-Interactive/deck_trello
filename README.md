@@ -2,6 +2,8 @@
 
 Nextcloud app that imports a Trello board into [Deck](https://github.com/nextcloud/deck).
 
+![Screenshot of a UI.](/img/Deck%20Trello%20Import.png)
+
 The import creates a new Deck board, or adds files and comments to a board that was already imported. It runs from the **Import Trello** page and from the `occ deck_trello:import` command.
 
 ## What is imported

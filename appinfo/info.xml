@@ -12,9 +12,10 @@
 	<documentation>
 		<user>https://github.com/400-Interactive/deck_trello#readme</user>
 	</documentation>
-	<website>https://github.com/400-Interactive/deck_trello</website>
-	<repository>https://github.com/400-Interactive/deck_trello</repository>
 	<category>organization</category>
+	<website>https://github.com/400-Interactive/deck_trello</website>
+	<bugs>https://github.com/400-Interactive/deck_trello/issues</bugs>
+	<repository>https://github.com/400-Interactive/deck_trello</repository>
 	<dependencies>
 		<nextcloud min-version="30" max-version="35"/>
 		<php min-version="8.1"/>

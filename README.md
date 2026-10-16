@@ -13,7 +13,7 @@ The import creates a new Deck board, or adds files and comments to a board that 
 | List | Stack |
 | Card | Card, including archived cards |
 | Label | Label, mapped onto the Deck palette |
-| Checklist | Deck Checklists when that app is enabled, otherwise Markdown checkboxes in the description |
+| Checklist | [Deck Trello-style Checklists](https://github.com/400-Interactive/deckchecklist) when that app is enabled, otherwise Markdown checkboxes in the description |
 | `commentCard` action | Deck comment |
 | Member | Deck user when a match exists, otherwise a line in the description |
 | Attachment | Deck file when a token is provided, otherwise a link |
@@ -75,7 +75,7 @@ Useful options:
 - `--user`: Nextcloud uid that owns the board
 - `--map-user=trello=nextcloud`, repeatable, or `--map-file`
 - `--include-closed-lists`
-- `--use-deck-checklist` when Deck Checklists is enabled
+- `--use-deck-checklist` when [Deck Trello-style Checklists](https://github.com/400-Interactive/deckchecklist) is enabled
 - `--trello-key` to replace the stored key
 - `--trello-token`
 - `--trello-board`: board address or id
@@ -97,7 +97,7 @@ occ app:enable deck_trello
 occ upgrade
 ```
 
-Nextcloud 30 to 35, PHP 8.1 or newer, and the Deck app. Deck Checklists is optional.
+Nextcloud 30 to 35, PHP 8.1 or newer, and the Deck app. [Deck Trello-style Checklists](https://github.com/400-Interactive/deckchecklist) is optional.
 
 ## Tests
 
